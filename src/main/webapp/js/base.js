@@ -9,7 +9,7 @@ org.cmhuynh.pingpong = org.cmhuynh.pingpong || {};
  * @type {string}
  */
 org.cmhuynh.pingpong.CLIENT_ID =
-    '594724891312-00lkntu62tn9m9pmmi0lcaj4uhkc2p81.apps.googleusercontent.com';
+    '594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com';
 
 /**
  * Scopes used by the application.
@@ -221,6 +221,10 @@ org.cmhuynh.pingpong.loadMatches = function(button, contentDiv, clubId, year, pl
 };
 
 org.cmhuynh.pingpong.renderMatches = function(matchRow, matches) {
+    $.each($(matchRow).children(), function(index, element) {
+        element.remove();
+    });
+
     var col = $( "<div/>", {
         "class": "col-sm-12"
     }).appendTo( matchRow );
