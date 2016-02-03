@@ -1,0 +1,10 @@
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+.player-header {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
