@@ -1,6 +1,7 @@
 package org.cmhuynh.pingpong.service;
 
 import org.cmhuynh.pingpong.domain.Club;
+import org.cmhuynh.pingpong.domain.ClubAdmin;
 import org.cmhuynh.pingpong.domain.Match;
 import org.cmhuynh.pingpong.domain.Player;
 
@@ -27,6 +28,14 @@ public class PingpongService {
 
     public List<Club> getClubs() {
         return datastoreHelper.getClubs();
+    }
+
+    public void saveClubAdmins(ClubAdmin clubAdmin) {
+        datastoreHelper.createClubAdmins(Collections.singletonList(clubAdmin));
+    }
+
+    public List<ClubAdmin> getClubAdmin(String clubId) {
+        return datastoreHelper.getClubAdmins(clubId);
     }
 
     public void savePlayer(String clubId, Player player) {

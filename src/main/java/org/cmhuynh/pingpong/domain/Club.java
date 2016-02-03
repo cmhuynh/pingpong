@@ -10,13 +10,15 @@ import java.io.Serializable;
 public class Club implements Serializable {
     private String clubId;
     private String name;
+    private boolean status;
 
     public Club() {
     }
 
-    public Club(String clubId, String name) {
+    public Club(String clubId, String name, boolean status) {
         this.clubId = clubId;
         this.name = name;
+        this.status = status;
     }
 
     public String getClubId() {
@@ -33,5 +35,13 @@ public class Club implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

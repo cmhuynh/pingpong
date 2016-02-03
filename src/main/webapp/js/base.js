@@ -69,22 +69,31 @@ org.cmhuynh.pingpong.initClubs = function() {
   gapi.client.pingpong.pingpongs.getClubs().execute(
   function(resp) {
     if (!resp.code) {
-      resp.items = resp.items || [];
+        var clubs = resp.items = resp.items || [];
+        clubs = clubs.filter(function(value) {
+            return value.status;
+        });
+        clubs.sort(function(c1, c2) {
+            return c1.name.toLowerCase < c2.name.toLowerCase;
+        });
+
       var ul = $('.navbar-form .dropdown ul.dropdown-menu');
       $.each(resp.items, function(index, element) {
         var li = $('<li/>')
             .prop('clubId', element.clubId)
             .appendTo(ul);
-        var a = $('<a/>')
-            .text( element.name )
-            .appendTo(li);
+        $('<a/>', {
+            "text": element.name,
+            click: function(event) {
+                var selText = $(this).text();
+                $(this).parents('.navbar-form .dropdown').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+                var selValue = $(this).parent().prop("clubId");
+                $("#selClub").prop("value", selValue);
+            }
+        }).appendTo(li);
       });
-      $(document).on('click', 'ul.dropdown-menu li a', function (event) {
-        var selText = $(this).text();
-        $(this).parents('.navbar-form .dropdown').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
-        var selValue = $(this).parent().prop("clubId");
-        $("#selClub").prop("value", selValue);
-      });
+    } else {
+        org.cmhuynh.pingpong.handleError(resp);
     }
   });
 };
@@ -95,6 +104,9 @@ org.cmhuynh.pingpong.loadPlayers = function(clubId, year) {
         if (!resp.code) {
             // sort by score descending
             var players = resp.items || [];
+            players = players.filter(function(value) {
+                return value.status;
+            });
             players.sort(function(p1, p2) {
                 return p2.score - p1.score;
             });
@@ -185,7 +197,6 @@ org.cmhuynh.pingpong.renderPlayers = function(clubId, year, players) {
             click: function() {
                 org.cmhuynh.pingpong.loadMatches($(this), matchRow, clubId, year, element.playerId);
             }
-
         }).appendTo(matchCol);
     });
 };

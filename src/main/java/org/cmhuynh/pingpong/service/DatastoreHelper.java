@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import org.cmhuynh.pingpong.domain.Club;
+import org.cmhuynh.pingpong.domain.ClubAdmin;
 import org.cmhuynh.pingpong.domain.Match;
 import org.cmhuynh.pingpong.domain.Player;
 
@@ -26,13 +27,19 @@ import java.util.List;
  */
 public class DatastoreHelper {
     private static final String CLUB_KIND = "C"; // ancestor path: Club
+    private static final String CLUB_ADMIN_KIND = "CA";
     private static final String PLAYER_KIND = "P"; // ancestor path: Club > Player (read as player in a club/league)
     private static final String MATCH_YEAR_KIND = "MY"; // ancestor path: Club > Player > Year (read as a match by player in a league)
     private static final String MATCH_DETAIL_KIND = "MD"; // ancestor path: Club > Player > Year > Match Id (a match itself)
-
     // Club properties
     private static final String CLUB_ID = "cId";
     private static final String CLUB_NAME = "cName";
+    private static final String CLUB_STATUS = "cStatus";
+
+    // Club Admin
+    private static final String CLUB_ADMIN_CID = "caId";
+    private static final String CLUB_ADMIN_EMAIL = "caEmail";
+
     // Player properties
     private static final String PLAYER_ID = "pId";
     private static final String PLAYER_NAME = "pName";
@@ -73,13 +80,15 @@ public class DatastoreHelper {
         Entity club = new Entity(clubKey);
         club.setProperty(CLUB_ID, input.getClubId());
         club.setProperty(CLUB_NAME, input.getName());
+        club.setProperty(CLUB_STATUS, input.isStatus());
         return club;
     }
 
     private Club asClub(Entity entity) {
         String clubId = (String) entity.getProperty(CLUB_ID);
         String name = (String) entity.getProperty(CLUB_NAME);
-        return new Club(clubId, name);
+        boolean status = (boolean) entity.getProperty(CLUB_STATUS);
+        return new Club(clubId, name, status);
     }
 
     public List<Club> getClubs() {
@@ -90,6 +99,44 @@ public class DatastoreHelper {
             clubs.add(asClub(result));
         }
         return clubs;
+    }
+
+    public void createClubAdmins(List<ClubAdmin> clubAdmins) {
+        List<Entity> entities = new ArrayList<>(clubAdmins.size());
+        for (ClubAdmin clubAdmin : clubAdmins) {
+            Key clubKey = clubAdminKey(clubAdmin.getClubId(), clubAdmin.getAdminEmail());
+            entities.add(asEntity(clubKey, clubAdmin));
+        }
+        datastoreService.put(entities);
+    }
+
+    private Key clubAdminKey(String clubId, String adminEmail) {
+        Key parentKey = clubKey(clubId);
+        return KeyFactory.createKey(parentKey, CLUB_ADMIN_KIND, adminEmail);
+    }
+
+    private Entity asEntity(Key clubAdminKey, ClubAdmin input) {
+        Entity club = new Entity(clubAdminKey);
+        club.setProperty(CLUB_ADMIN_CID, input.getClubId());
+        club.setProperty(CLUB_ADMIN_EMAIL, input.getAdminEmail());
+        return club;
+    }
+
+    private ClubAdmin asClubAdmin(Entity entity) {
+        String clubId = (String) entity.getProperty(CLUB_ADMIN_CID);
+        String adminEmail = (String) entity.getProperty(CLUB_ADMIN_EMAIL);
+        return new ClubAdmin(clubId, adminEmail);
+    }
+
+    public List<ClubAdmin> getClubAdmins(String clubId) {
+        Key clubKey = clubKey(clubId);
+        Query query = new Query(CLUB_ADMIN_KIND, clubKey);
+        PreparedQuery pq = datastoreService.prepare(query);
+        List<ClubAdmin> clubAdmins = new ArrayList<>();
+        for (Entity result : pq.asIterable()) {
+            clubAdmins.add(asClubAdmin(result));
+        }
+        return clubAdmins;
     }
 
     public void savePlayers(String clubId, List<Player> players) {
@@ -121,8 +168,8 @@ public class DatastoreHelper {
         String playerId = (String) entity.getProperty(PLAYER_ID);
         String playerName = (String) entity.getProperty(PLAYER_NAME);
         String imageUrl = (String) entity.getProperty(PLAYER_IMAGE_URL);
-        int score = (int) entity.getProperty(PLAYER_SCORE);
-        int lastScore = (int) entity.getProperty(PLAYER_LAST_SCORE);
+        int score = ((Long) entity.getProperty(PLAYER_SCORE)).intValue();
+        int lastScore = ((Long) entity.getProperty(PLAYER_LAST_SCORE)).intValue();
         boolean status = (boolean) entity.getProperty(PLAYER_STATUS);
         return new Player(playerId, playerName, imageUrl, score, lastScore, status);
     }
@@ -195,14 +242,14 @@ public class DatastoreHelper {
         String matchName = (String) entity.getProperty(MATCH_NAME);
         String p1Id = (String) entity.getProperty(MATCH_P1_ID);
         String p1Name = (String) entity.getProperty(MATCH_P1_NAME);
-        int p1Set = (int) entity.getProperty(MATCH_P1_SET);
-        int p1Score = (int) entity.getProperty(MATCH_P1_SCORE);
-        int p1Gain = (int) entity.getProperty(MATCH_P1_GAIN);
+        int p1Set = ((Long) entity.getProperty(MATCH_P1_SET)).intValue();
+        int p1Score = ((Long) entity.getProperty(MATCH_P1_SCORE)).intValue();
+        int p1Gain = ((Long) entity.getProperty(MATCH_P1_GAIN)).intValue();
         String p2Id = (String) entity.getProperty(MATCH_P2_ID);
         String p2Name = (String) entity.getProperty(MATCH_P2_NAME);
-        int p2Set = (int) entity.getProperty(MATCH_P2_SET);
-        int p2Score = (int) entity.getProperty(MATCH_P2_SCORE);
-        int p2Gain = (int) entity.getProperty(MATCH_P2_GAIN);
+        int p2Set = ((Long) entity.getProperty(MATCH_P2_SET)).intValue();
+        int p2Score = ((Long) entity.getProperty(MATCH_P2_SCORE)).intValue();
+        int p2Gain = ((Long) entity.getProperty(MATCH_P2_GAIN)).intValue();
         return new Match(matchDate, matchName, p1Id, p1Name, p1Set, p1Score, p1Gain, p2Id, p2Name, p2Set, p2Score, p2Gain);
     }
 
