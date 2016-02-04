@@ -30,7 +30,7 @@ public class PingpongService {
         return datastoreHelper.getClubs();
     }
 
-    public void saveClubAdmins(ClubAdmin clubAdmin) {
+    public void saveClubAdmin(ClubAdmin clubAdmin) {
         datastoreHelper.createClubAdmins(Collections.singletonList(clubAdmin));
     }
 

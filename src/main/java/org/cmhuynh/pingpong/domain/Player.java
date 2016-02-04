@@ -14,17 +14,19 @@ public class Player implements Serializable {
     private Integer score = 1600;
     private Integer lastScore = 1600;
     private boolean status = true;
+    private String level = "A";
 
     public Player() {
     }
 
-    public Player(String playerId, String name, String imageUrl, Integer score, Integer lastScore, boolean status) {
+    public Player(String playerId, String name, String imageUrl, Integer score, Integer lastScore, boolean status, String level) {
         this.playerId = playerId;
         this.name = name;
         this.imageUrl = imageUrl;
         this.score = score;
         this.lastScore = lastScore;
         this.status = status;
+        this.level = level;
     }
 
     public String getPlayerId() {
@@ -73,5 +75,13 @@ public class Player implements Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }

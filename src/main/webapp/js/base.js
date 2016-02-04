@@ -18,47 +18,6 @@ org.cmhuynh.pingpong.CLIENT_ID =
 org.cmhuynh.pingpong.SCOPES =
     'https://www.googleapis.com/auth/userinfo.email';
 
-/**
- * Whether or not the user is signed in.
- * @type {boolean}
- */
-org.cmhuynh.pingpong.signedIn = false;
-
-/**
- * Loads the application UI after the user has completed auth.
- */
-org.cmhuynh.pingpong.userAuthed = function() {
-  var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
-    if (!resp.code) {
-      org.cmhuynh.pingpong.signedIn = true;
-      $("#signinButton").text("Sign out");
-    }
-  });
-};
-
-/**
- * Handles the auth flow, with the given value for immediate mode.
- * @param {boolean} mode Whether or not to use immediate mode.
- * @param {Function} callback Callback to call on completion.
- */
-org.cmhuynh.pingpong.signin = function(mode, callback) {
-  gapi.auth.authorize({client_id: org.cmhuynh.pingpong.CLIENT_ID,
-      scope: org.cmhuynh.pingpong.SCOPES, immediate: mode},
-      callback);
-};
-
-/**
- * Presents the user with the authorization popup.
- */
-org.cmhuynh.pingpong.auth = function() {
-  if (!org.cmhuynh.pingpong.signedIn) {
-    org.cmhuynh.pingpong.signin(false, org.cmhuynh.pingpong.userAuthed);
-  } else {
-    org.cmhuynh.pingpong.signedIn = false;
-    $("#signinButton").text("Sign in");
-  }
-};
-
 org.cmhuynh.pingpong.handleError = function(resp) {
     if(!resp.code) {
         console.log(resp.message);
@@ -102,13 +61,19 @@ org.cmhuynh.pingpong.loadPlayers = function(clubId, year) {
   gapi.client.pingpong.pingpongs.getPlayers({"clubId": clubId}).execute(
     function(resp) {
         if (!resp.code) {
-            // sort by score descending
             var players = resp.items || [];
             players = players.filter(function(value) {
                 return value.status;
             });
+            // sort by level A, B, C and then by score descending
             players.sort(function(p1, p2) {
-                return p2.score - p1.score;
+                var l1 = org.cmhuynh.pingpong._playerLevel(p1);
+                var l2 = org.cmhuynh.pingpong._playerLevel(p2);
+                if (l1 != l2) {
+                    return l1 - l2;
+                } else {
+                    return p2.score - p1.score;
+                }
             });
 
             org.cmhuynh.pingpong.renderPlayers(clubId, year, players);
@@ -116,6 +81,14 @@ org.cmhuynh.pingpong.loadPlayers = function(clubId, year) {
             org.cmhuynh.pingpong.handleError(resp);
         }
     });
+};
+
+org.cmhuynh.pingpong._playerLevel = function(player) {
+    if(player.level) {
+        return player.level;
+    } else {
+        return "A";
+    }
 };
 
 org.cmhuynh.pingpong.renderPlayers = function(clubId, year, players) {
@@ -287,10 +260,6 @@ org.cmhuynh.pingpong.initButtons = function() {
         var year = $(".navbar-form input.j-year-input").val();
         org.cmhuynh.pingpong.loadPlayers(clubId, year);
     });
-
-    $("#signinButton").click(function() {
-        org.cmhuynh.pingpong.auth();
-    });
 };
 
 /**
@@ -302,12 +271,9 @@ org.cmhuynh.pingpong.init = function(apiRoot) {
   var callback = function() {
     if (--apisToLoad == 0) {
       org.cmhuynh.pingpong.initButtons();
-      org.cmhuynh.pingpong.signin(true,
-          org.cmhuynh.pingpong.userAuthed);
     }
   };
 
-  apisToLoad = 2; // must match number of calls to gapi.client.load()
+  apisToLoad = 1; // must match number of calls to gapi.client.load()
   gapi.client.load('pingpong', 'v1', callback, apiRoot);
-  gapi.client.load('oauth2', 'v2', callback);
 };

@@ -47,6 +47,8 @@ public class DatastoreHelper {
     private static final String PLAYER_SCORE = "pScore";
     private static final String PLAYER_LAST_SCORE = "pLastScore";
     private static final String PLAYER_STATUS = "pStatus";
+    private static final String PLAYER_LEVEL = "pLevel";
+
     // Match properties
     private static final String MATCH_DATE = "mDate";
     private static final String MATCH_NAME = "mName";
@@ -161,6 +163,7 @@ public class DatastoreHelper {
         player.setProperty(PLAYER_SCORE, input.getScore());
         player.setProperty(PLAYER_LAST_SCORE, input.getLastScore());
         player.setProperty(PLAYER_STATUS, input.isStatus());
+        player.setProperty(PLAYER_LEVEL, input.getLevel());
         return player;
     }
 
@@ -171,7 +174,8 @@ public class DatastoreHelper {
         int score = ((Long) entity.getProperty(PLAYER_SCORE)).intValue();
         int lastScore = ((Long) entity.getProperty(PLAYER_LAST_SCORE)).intValue();
         boolean status = (boolean) entity.getProperty(PLAYER_STATUS);
-        return new Player(playerId, playerName, imageUrl, score, lastScore, status);
+        String level = (String) entity.getProperty(PLAYER_LEVEL);
+        return new Player(playerId, playerName, imageUrl, score, lastScore, status, level);
     }
 
     public List<Player> getPlayersByClub(String clubId) {
