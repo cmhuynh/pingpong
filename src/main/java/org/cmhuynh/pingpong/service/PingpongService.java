@@ -5,13 +5,7 @@ import org.cmhuynh.pingpong.domain.ClubAdmin;
 import org.cmhuynh.pingpong.domain.Match;
 import org.cmhuynh.pingpong.domain.Player;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Manage entities including Player, Club, and Match.
@@ -34,8 +28,20 @@ public class PingpongService {
         datastoreHelper.createClubAdmins(Collections.singletonList(clubAdmin));
     }
 
-    public List<ClubAdmin> getClubAdmin(String clubId) {
-        return datastoreHelper.getClubAdmins(clubId);
+    public List<Club> getClubsByAdmin(String adminEmail) {
+        List<ClubAdmin> clubsAdmins = datastoreHelper.getClubAdminsByAdmin(adminEmail);
+        Set<String> clubIds = new HashSet<>();
+        for (ClubAdmin clubAdmin : clubsAdmins) {
+            clubIds.add(clubAdmin.getClubId());
+        }
+        List<Club> clubs = getClubs();
+        List<Club> filteredClubs = new ArrayList<>();
+        for (Club club : clubs) {
+            if (clubIds.contains(club.getClubId())) {
+                filteredClubs.add(club);
+            }
+        }
+        return filteredClubs;
     }
 
     public void savePlayer(String clubId, Player player) {

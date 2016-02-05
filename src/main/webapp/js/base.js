@@ -28,7 +28,7 @@ org.cmhuynh.pingpong.initClubs = function() {
   gapi.client.pingpong.pingpongs.getClubs().execute(
   function(resp) {
     if (!resp.code) {
-        var clubs = resp.items = resp.items || [];
+        var clubs = resp.items || [];
         clubs = clubs.filter(function(value) {
             return value.status;
         });
@@ -36,7 +36,7 @@ org.cmhuynh.pingpong.initClubs = function() {
             return c1.name.toLowerCase < c2.name.toLowerCase;
         });
 
-      var ul = $('.navbar-form .dropdown ul.dropdown-menu');
+      var ul = $('ul.j-dropdown-menu-club');
       $.each(resp.items, function(index, element) {
         var li = $('<li/>')
             .prop('clubId', element.clubId)
@@ -45,7 +45,7 @@ org.cmhuynh.pingpong.initClubs = function() {
             "text": element.name,
             click: function(event) {
                 var selText = $(this).text();
-                $(this).parents('.navbar-form .dropdown').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+                $('button.j-dropdown-toggle-club').html(selText+' <span class="caret"></span>');
                 var selValue = $(this).parent().prop("clubId");
                 $("#selClub").prop("value", selValue);
             }
@@ -67,8 +67,8 @@ org.cmhuynh.pingpong.loadPlayers = function(clubId, year) {
             });
             // sort by level A, B, C and then by score descending
             players.sort(function(p1, p2) {
-                var l1 = org.cmhuynh.pingpong._playerLevel(p1);
-                var l2 = org.cmhuynh.pingpong._playerLevel(p2);
+                var l1 = p1.level || "A";
+                var l2 = p2.level || "A";
                 if (l1 != l2) {
                     return l1 - l2;
                 } else {
@@ -81,14 +81,6 @@ org.cmhuynh.pingpong.loadPlayers = function(clubId, year) {
             org.cmhuynh.pingpong.handleError(resp);
         }
     });
-};
-
-org.cmhuynh.pingpong._playerLevel = function(player) {
-    if(player.level) {
-        return player.level;
-    } else {
-        return "A";
-    }
 };
 
 org.cmhuynh.pingpong.renderPlayers = function(clubId, year, players) {

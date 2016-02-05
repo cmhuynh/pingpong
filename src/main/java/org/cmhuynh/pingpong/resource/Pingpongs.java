@@ -14,6 +14,7 @@ import org.cmhuynh.pingpong.service.PingpongService;
 
 import javax.inject.Named;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -29,14 +30,14 @@ public class Pingpongs {
   private PingpongService pingpongService = new PingpongService();
   private PermissionHelper permissionHelper = new PermissionHelper();
 
-  @ApiMethod(name = "pingpongs.getClubs")
+  @ApiMethod(name = "pingpongs.getClubs", path = "player/club")
   public List<Club> getClubs() {
     return pingpongService.getClubs();
   }
 
-  @ApiMethod(name = "pingpongs.saveClub", httpMethod = "post")
+  @ApiMethod(name = "admin.saveClub", httpMethod = "post", path = "admin/club")
   public Club saveClub(User user, Club club) throws ServiceException {
-    if (permissionHelper.canManageClub(club.getClubId(), user)) {
+    if (permissionHelper.isClubAdmin(club.getClubId(), user)) {
       pingpongService.saveClub(club);
       return club;
     } else {
@@ -44,14 +45,18 @@ public class Pingpongs {
     }
   }
 
-  @ApiMethod(name = "pingpongs.getClubAdmins")
-  public List<ClubAdmin> getClubAdmins(@Named("clubId") String clubId) {
-    return pingpongService.getClubAdmin(clubId);
+  @ApiMethod(name = "admin.getClubsByAdmin", path = "admin/club")
+  public List<Club> getClubsByAdmin(User user) {
+    if (user != null) {
+      return pingpongService.getClubsByAdmin(user.getEmail());
+    } else {
+      return Collections.emptyList();
+    }
   }
 
-  @ApiMethod(name = "pingpongs.saveClubAdmin", httpMethod = "post")
+  @ApiMethod(name = "admin.saveClubAdmin", httpMethod = "post", path = "admin/clubAdmin")
   public ClubAdmin saveClubAdmin(User user, ClubAdmin clubAdmin) throws ServiceException {
-    if (permissionHelper.canManageClub(clubAdmin.getClubId(), user)) {
+    if (permissionHelper.isClubAdmin(clubAdmin.getClubId(), user)) {
       pingpongService.saveClubAdmin(clubAdmin);
       return clubAdmin;
     } else {
@@ -59,14 +64,14 @@ public class Pingpongs {
     }
   }
 
-  @ApiMethod(name = "pingpongs.getPlayers")
+  @ApiMethod(name = "pingpongs.getPlayers", path = "player/player")
   public List<Player> getPlayersByClub(@Named("clubId") String clubId) {
     return pingpongService.getPlayersByClub(clubId);
   }
 
-  @ApiMethod(name = "pingpongs.savePlayer", httpMethod = "post")
+  @ApiMethod(name = "admin.savePlayer", httpMethod = "post", path = "admin/player")
   public Player savePlayer(User user, @Named("clubId") String clubId, Player player) throws ServiceException {
-    if (permissionHelper.canManageClub(clubId, user)) {
+    if (permissionHelper.isClubAdmin(clubId, user)) {
       pingpongService.savePlayer(clubId, player);
       return player;
     } else {
@@ -74,14 +79,14 @@ public class Pingpongs {
     }
   }
 
-  @ApiMethod(name = "pingpongs.getPlayerMatches")
+  @ApiMethod(name = "pingpongs.getPlayerMatches", path="player/match")
   public List<Match> getPlayerMatchesByYear(@Named("playerId") String playerId, @Named("clubId") String clubId, @Named("year") int year) {
     return pingpongService.getPlayerMatchesByYear(playerId, clubId, year);
   }
 
-  @ApiMethod(name = "pingpongs.savePlayerMatch", httpMethod = "post")
+  @ApiMethod(name = "admin.savePlayerMatch", httpMethod = "post", path="admin/match")
   public Match savePlayerMatch(User user, @Named("clubId") String clubId, Match match) throws ServiceException {
-    if (permissionHelper.canManageClub(clubId, user)) {
+    if (permissionHelper.isClubAdmin(clubId, user)) {
       pingpongService.saveMatch(clubId, match);
       return match;
     } else {
@@ -89,7 +94,7 @@ public class Pingpongs {
     }
   }
 
-  @ApiMethod(name = "pingpongs.initSampleData", httpMethod = "post")
+  @ApiMethod(name = "admin.initSampleData", httpMethod = "post", path="admin/init")
   public void initSampleData(User user) throws ServiceException {
     if (permissionHelper.isAppAdmin()) {
       String clubId = "clb1q9";
@@ -107,6 +112,8 @@ public class Pingpongs {
       pingpongService.saveMatch(clubId, new Match(today.getTime(), "Friendly match 2", "cmhuynh@gmail.com", "Chau Huynh", 0, 1592, -7, "teogamingcenter@gmail.com", "Tri Le", 3, 1608, 7));
 
       pingpongService.saveClubAdmin(new ClubAdmin(clubId, "cmhuynh@gmail.com"));
+      pingpongService.saveClubAdmin(new ClubAdmin(clubId, "teogamingcenter@gmail.com"));
+      pingpongService.saveClubAdmin(new ClubAdmin(clubId, "example@example.com")); // OAuth on local yield this magic email
     } else {
       throw new ForbiddenException("No permission to manage Club");
     }

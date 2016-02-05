@@ -12,34 +12,15 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <link type="text/css" rel="stylesheet" href="/css/style.css">
-    <script type="text/javascript" src="/js/base.js"></script>
+    <script type="text/javascript" src="/js/admin.js"></script>
 </head>
 <body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
-        <div class="navbar-header">
-            <form class="navbar-form">
-                <div class="form-group">
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle j-dropdown-toggle-club" type="button" id="clubDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            Your club
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu j-dropdown-menu-club" aria-labelledby="clubDropdown">
-                        </ul>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="text" placeholder="2016" class="form-control j-year-input">
-                </div>
-                <button type="submit" class="btn btn-success">Load</button>
-                <input type="hidden" id="selClub">
-            </form>
-        </div>
         <div class="navbar-header pull-right">
             <div class="navbar-form navbar-right">
-
+                <a href="javascript:void(0);" class="form-control" id="signinButton">Sign in</a>
             </div>
         </div>
     </div>
@@ -52,21 +33,26 @@
     </div>
 </div>
 
-<div class="container j-player-list">
-    <div class="row player-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-2">Name</div> <div class="col-sm-2">Image</div> <div class="col-sm-2">Latest Score</div> <div class="col-sm-2">Last Score</div> <div class="col-sm-2">&nbsp;</div> <div class="col-sm-2">&nbsp;</div>
+<div class="container">
+    <div class="navbar-header">
+        <div class="form-group">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle j-dropdown-toggle-club" type="button" id="clubDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Your club
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu j-dropdown-menu-club" aria-labelledby="clubDropdown">
+                </ul>
             </div>
         </div>
+        <input type="hidden" id="selClub">
     </div>
 </div>
-
 
 <div class="container">
     <script type="text/javascript">
         function init() {
-            org.cmhuynh.pingpong.init('//' + window.location.host + '/_ah/api');
+            org.cmhuynh.pingpong.admin.init('//' + window.location.host + '/_ah/api');
         }
     </script>
     <script src="https://apis.google.com/js/client.js?onload=init"></script>

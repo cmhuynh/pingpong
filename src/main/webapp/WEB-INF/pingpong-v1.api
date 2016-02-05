@@ -1,0 +1,393 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://clb1q9.appspot.com/_ah/api",
+  "name" : "pingpong",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "discovery" : [ "PUBLIC" ],
+  "adapter" : {
+    "bns" : "https://clb1q9.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "pingpong.admin.saveClub" : {
+      "path" : "admin/club",
+      "httpMethod" : "post",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.saveClub",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "pingpong.pingpongs.getClubs" : {
+      "path" : "player/club",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.getClubs",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "pingpong.admin.getClubsByAdmin" : {
+      "path" : "admin/club",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.getClubsByAdmin",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "pingpong.pingpongs.getPlayers" : {
+      "path" : "player/player",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.getPlayersByClub",
+      "request" : {
+        "parameters" : {
+          "clubId" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "pingpong.pingpongs.getPlayerMatches" : {
+      "path" : "player/match",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.getPlayerMatchesByYear",
+      "request" : {
+        "parameters" : {
+          "playerId" : {
+            "type" : "string",
+            "required" : true
+          },
+          "clubId" : {
+            "type" : "string",
+            "required" : true
+          },
+          "year" : {
+            "type" : "int32",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "pingpong.admin.savePlayerMatch" : {
+      "path" : "admin/match",
+      "httpMethod" : "post",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.savePlayerMatch",
+      "request" : {
+        "parameters" : {
+          "clubId" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "pingpong.admin.initSampleData" : {
+      "path" : "admin/init",
+      "httpMethod" : "post",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.initSampleData",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "pingpong.admin.saveClubAdmin" : {
+      "path" : "admin/clubAdmin",
+      "httpMethod" : "post",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.saveClubAdmin",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "pingpong.admin.savePlayer" : {
+      "path" : "admin/player",
+      "httpMethod" : "post",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com" ],
+      "clientIds" : [ "594724891312-h9v8svhh468ei3uquo0lha5bamq2op3e.apps.googleusercontent.com", "replace this with your Android client ID", "replace this with your iOS client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "org.cmhuynh.pingpong.resource.Pingpongs.savePlayer",
+      "request" : {
+        "parameters" : {
+          "clubId" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "Club" : {
+        "id" : "Club",
+        "type" : "object",
+        "properties" : {
+          "clubId" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "ClubCollection" : {
+        "id" : "ClubCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Club"
+            }
+          }
+        }
+      },
+      "Player" : {
+        "id" : "Player",
+        "type" : "object",
+        "properties" : {
+          "playerId" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "imageUrl" : {
+            "type" : "string"
+          },
+          "score" : {
+            "type" : "integer"
+          },
+          "lastScore" : {
+            "type" : "integer"
+          },
+          "status" : {
+            "type" : "boolean"
+          },
+          "level" : {
+            "type" : "string"
+          }
+        }
+      },
+      "PlayerCollection" : {
+        "id" : "PlayerCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Player"
+            }
+          }
+        }
+      },
+      "Match" : {
+        "id" : "Match",
+        "type" : "object",
+        "properties" : {
+          "matchDate" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "matchName" : {
+            "type" : "string"
+          },
+          "p1Id" : {
+            "type" : "string"
+          },
+          "p1Name" : {
+            "type" : "string"
+          },
+          "p1Set" : {
+            "type" : "integer"
+          },
+          "p1Score" : {
+            "type" : "integer"
+          },
+          "p1Gain" : {
+            "type" : "integer"
+          },
+          "p2Id" : {
+            "type" : "string"
+          },
+          "p2Name" : {
+            "type" : "string"
+          },
+          "p2Set" : {
+            "type" : "integer"
+          },
+          "p2Score" : {
+            "type" : "integer"
+          },
+          "p2Gain" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "MatchCollection" : {
+        "id" : "MatchCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Match"
+            }
+          }
+        }
+      },
+      "ClubAdmin" : {
+        "id" : "ClubAdmin",
+        "type" : "object",
+        "properties" : {
+          "clubId" : {
+            "type" : "string"
+          },
+          "adminEmail" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "org.cmhuynh.pingpong.resource.Pingpongs.saveClub" : {
+        "request" : {
+          "$ref" : "Club"
+        },
+        "response" : {
+          "$ref" : "Club"
+        }
+      },
+      "org.cmhuynh.pingpong.resource.Pingpongs.getClubs" : {
+        "response" : {
+          "$ref" : "ClubCollection"
+        }
+      },
+      "org.cmhuynh.pingpong.resource.Pingpongs.getClubsByAdmin" : {
+        "response" : {
+          "$ref" : "ClubCollection"
+        }
+      },
+      "org.cmhuynh.pingpong.resource.Pingpongs.getPlayersByClub" : {
+        "response" : {
+          "$ref" : "PlayerCollection"
+        }
+      },
+      "org.cmhuynh.pingpong.resource.Pingpongs.getPlayerMatchesByYear" : {
+        "response" : {
+          "$ref" : "MatchCollection"
+        }
+      },
+      "org.cmhuynh.pingpong.resource.Pingpongs.savePlayerMatch" : {
+        "request" : {
+          "$ref" : "Match"
+        },
+        "response" : {
+          "$ref" : "Match"
+        }
+      },
+      "org.cmhuynh.pingpong.resource.Pingpongs.initSampleData" : {
+      },
+      "org.cmhuynh.pingpong.resource.Pingpongs.saveClubAdmin" : {
+        "request" : {
+          "$ref" : "ClubAdmin"
+        },
+        "response" : {
+          "$ref" : "ClubAdmin"
+        }
+      },
+      "org.cmhuynh.pingpong.resource.Pingpongs.savePlayer" : {
+        "request" : {
+          "$ref" : "Player"
+        },
+        "response" : {
+          "$ref" : "Player"
+        }
+      }
+    }
+  }
+}

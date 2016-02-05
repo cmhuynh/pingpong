@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class DatastoreHelper {
     private static final String CLUB_KIND = "C"; // ancestor path: Club
+    private static final String ADMIN_KIND = "A";
     private static final String CLUB_ADMIN_KIND = "CA";
     private static final String PLAYER_KIND = "P"; // ancestor path: Club > Player (read as player in a club/league)
     private static final String MATCH_YEAR_KIND = "MY"; // ancestor path: Club > Player > Year (read as a match by player in a league)
@@ -112,9 +113,12 @@ public class DatastoreHelper {
         datastoreService.put(entities);
     }
 
+    private Key adminKey(String adminEmail) {
+        return KeyFactory.createKey(ADMIN_KIND, adminEmail);
+    }
     private Key clubAdminKey(String clubId, String adminEmail) {
-        Key parentKey = clubKey(clubId);
-        return KeyFactory.createKey(parentKey, CLUB_ADMIN_KIND, adminEmail);
+        Key parentKey = adminKey(adminEmail);
+        return KeyFactory.createKey(parentKey, CLUB_ADMIN_KIND, clubId);
     }
 
     private Entity asEntity(Key clubAdminKey, ClubAdmin input) {
@@ -130,9 +134,9 @@ public class DatastoreHelper {
         return new ClubAdmin(clubId, adminEmail);
     }
 
-    public List<ClubAdmin> getClubAdmins(String clubId) {
-        Key clubKey = clubKey(clubId);
-        Query query = new Query(CLUB_ADMIN_KIND, clubKey);
+    public List<ClubAdmin> getClubAdminsByAdmin(String adminEmail) {
+        Key adminKey = adminKey(adminEmail);
+        Query query = new Query(CLUB_ADMIN_KIND, adminKey);
         PreparedQuery pq = datastoreService.prepare(query);
         List<ClubAdmin> clubAdmins = new ArrayList<>();
         for (Entity result : pq.asIterable()) {

@@ -4,6 +4,7 @@ import com.google.appengine.api.oauth.OAuthServiceFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.utils.SystemProperty;
 import org.cmhuynh.pingpong.domain.ClubAdmin;
 import org.cmhuynh.pingpong.resource.Constants;
 
@@ -16,9 +17,16 @@ import java.util.List;
  */
 public class PermissionHelper {
 
-    private DatastoreHelper datastoreHelper;
+    private DatastoreHelper datastoreHelper = new DatastoreHelper();
 
+    private boolean isProductionEnvironment() {
+        return (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production);
+    }
     public boolean isAppAdmin() {
+        if (!isProductionEnvironment()) {
+            return true;
+        }
+
         boolean isAdmin = false;
         try {
             UserService userService = UserServiceFactory.getUserService();
@@ -32,19 +40,19 @@ public class PermissionHelper {
     }
 
     public boolean isClubAdmin(String clubId, User user) {
+        if (!isProductionEnvironment()) {
+            return true;
+        }
+
         if (user == null || user.getEmail() == null) {
             return false;
         }
-        List<ClubAdmin> clubAdmins = datastoreHelper.getClubAdmins(clubId);
+        List<ClubAdmin> clubAdmins = datastoreHelper.getClubAdminsByAdmin(user.getEmail());
         for (ClubAdmin clubAdmin : clubAdmins) {
-            if (clubAdmin.getAdminEmail().equalsIgnoreCase(user.getEmail())) {
+            if (clubAdmin.getAdminEmail().equalsIgnoreCase(clubId)) {
                 return true;
             }
         }
         return false;
-    }
-
-    public boolean canManageClub(String clubId, User user) {
-        return isClubAdmin(clubId, user) || isAppAdmin();
     }
 }
