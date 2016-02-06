@@ -49,7 +49,7 @@ public class PermissionHelper {
         }
         List<ClubAdmin> clubAdmins = datastoreHelper.getClubAdminsByAdmin(user.getEmail());
         for (ClubAdmin clubAdmin : clubAdmins) {
-            if (clubAdmin.getAdminEmail().equalsIgnoreCase(clubId)) {
+            if (clubAdmin.getClubId().equalsIgnoreCase(clubId)) {
                 return true;
             }
         }

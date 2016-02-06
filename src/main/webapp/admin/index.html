@@ -3,13 +3,15 @@
 <head>
     <title>So you think you can ping!</title>
     <meta charset="utf-8">
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+    <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 
     <link type="text/css" rel="stylesheet" href="/css/style.css">
     <script type="text/javascript" src="/js/admin.js"></script>
@@ -26,26 +28,209 @@
     </div>
 </nav>
 
-<div class="jumbotron">
-    <div class="container">
-        <h1>So you think you can ping!</h1>
-        <p>Have fun with your games.</p>
-    </div>
-</div>
-
 <div class="container">
-    <div class="navbar-header">
-        <div class="form-group">
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle j-dropdown-toggle-club" type="button" id="clubDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Your club
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu j-dropdown-menu-club" aria-labelledby="clubDropdown">
-                </ul>
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active"><a href="#player" data-toggle="tab">Player</a></li>
+        <li class=""><a href="#match" data-toggle="tab">Match</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active in" id="player">
+            <div class="container">
+                <div class="well">Select a club and create more players</div>
+                <div class="alert alert-success hidden j-save-player-result" role="alert">
+                    <strong>Well done!</strong> You successfully created a new player.
+                </div>
+                <form class="navbar-form j-form-player">
+                    <div class="form-group">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">&nbsp;</div>
+                                <div class="col-sm-2">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle j-dropdown-toggle-club" type="button" id="playerClubDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Your club
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu j-dropdown-menu-club" aria-labelledby="playerClubDropdown">
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" class="j-selected-club">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Email (ID)
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-player-id">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Name
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-player-name">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Image URL (* optional)
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-player-image-url">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Score
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-player-score" value="1600">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Last Score
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-player-last-score" value="1600">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Status
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" class="form-control j-player-status" autocomplete="off" checked> Active
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Level (A/B/C/D/E)
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-player-level" value="A">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <input type="hidden" id="selClub">
+        <div class="tab-pane fade" id="match">
+            <div class="container">
+                <div class="well">Select a club, 2 players and record a match result</div>
+                <div class="alert alert-success hidden j-save-match-result" role="alert">
+                    <strong>Well done!</strong> You successfully created a new match.
+                </div>
+                <form class="navbar-form j-form-match">
+                    <div class="form-group">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">&nbsp;</div>
+                                <div class="col-sm-2">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle j-dropdown-toggle-club" type="button" id="matchClubDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Your club
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu j-dropdown-menu-club" aria-labelledby="matchClubDropdown">
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" class="j-selected-club">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Match date
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <div class='input-group date j-match-date' id='datetimepicker1'>
+                                            <input type='text' class="form-control" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Match name
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-match-name">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Player 1
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle j-dropdown-toggle-player1" type="button" id="player1Dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Select Player
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu j-dropdown-menu-player1" aria-labelledby="player1Dropdown">
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" class="j-selected-player1">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Player 1's Set
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-match-p1Set">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Player 2's Set
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="input" class="form-control j-match-p2Set">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    Player 2
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle j-dropdown-toggle-player2" type="button" id="player2Dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Select Player
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu j-dropdown-menu-player2" aria-labelledby="player2Dropdown">
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" class="j-selected-player2">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 

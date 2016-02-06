@@ -8,3 +8,11 @@ body {
     font-weight: bold;
 }
 
+.show {
+    display: block !important;
+}
+
+.hidden {
+    display: none !important;
+    visibility: hidden !important;
+}
