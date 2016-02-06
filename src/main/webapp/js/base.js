@@ -37,7 +37,7 @@ org.cmhuynh.pingpong.initClubs = function() {
         });
 
       var ul = $('ul.j-dropdown-menu-club');
-      $.each(resp.items, function(index, element) {
+      $.each(clubs, function(index, element) {
         var li = $('<li/>')
             .prop('clubId', element.clubId)
             .appendTo(ul);

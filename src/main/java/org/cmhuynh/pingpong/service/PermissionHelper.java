@@ -47,12 +47,14 @@ public class PermissionHelper {
         if (user == null || user.getEmail() == null) {
             return false;
         }
+
         List<ClubAdmin> clubAdmins = datastoreHelper.getClubAdminsByAdmin(user.getEmail());
         for (ClubAdmin clubAdmin : clubAdmins) {
             if (clubAdmin.getClubId().equalsIgnoreCase(clubId)) {
                 return true;
             }
         }
-        return false;
+
+        return isAppAdmin();
     }
 }
