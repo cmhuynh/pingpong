@@ -6,6 +6,8 @@
 pingpong.iml
 target/
 
+src/main/java/META-INF/persistence.xml
+
 *.class
 
 # Mobile Tools for Java (J2ME)

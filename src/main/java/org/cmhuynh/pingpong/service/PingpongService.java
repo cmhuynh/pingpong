@@ -1,5 +1,10 @@
 package org.cmhuynh.pingpong.service;
 
+import com.google.appengine.repackaged.com.google.common.base.Function;
+import com.google.appengine.repackaged.com.google.common.base.Predicate;
+import com.google.appengine.repackaged.com.google.common.collect.Iterables;
+import com.google.appengine.repackaged.com.google.common.collect.Lists;
+import com.google.appengine.repackaged.com.google.common.collect.Maps;
 import org.cmhuynh.pingpong.domain.Club;
 import org.cmhuynh.pingpong.domain.ClubAdmin;
 import org.cmhuynh.pingpong.domain.Match;
@@ -17,7 +22,7 @@ public class PingpongService {
     private DatastoreHelper datastoreHelper = new DatastoreHelper();
 
     public void saveClub(Club club) {
-        datastoreHelper.saveClubs(Collections.<Club>singletonList(club));
+        datastoreHelper.saveClubs(Collections.singletonList(club));
     }
 
     public List<Club> getClubs() {
@@ -30,22 +35,24 @@ public class PingpongService {
 
     public List<Club> getClubsByAdmin(String adminEmail) {
         List<ClubAdmin> clubsAdmins = datastoreHelper.getClubAdminsByAdmin(adminEmail);
-        Set<String> clubIds = new HashSet<>();
-        for (ClubAdmin clubAdmin : clubsAdmins) {
-            clubIds.add(clubAdmin.getClubId());
-        }
-        List<Club> clubs = getClubs();
-        List<Club> filteredClubs = new ArrayList<>();
-        for (Club club : clubs) {
-            if (clubIds.contains(club.getClubId())) {
-                filteredClubs.add(club);
+        final List<String> clubIds = Lists.transform(clubsAdmins, new Function<ClubAdmin, String>() {
+            @Override
+            public String apply(ClubAdmin clubAdmin) {
+                return clubAdmin.getClubId();
             }
-        }
-        return filteredClubs;
+        });
+        List<Club> clubs = getClubs();
+        Iterable<Club> filteredClubs = Iterables.filter(clubs, new Predicate<Club>() {
+            @Override
+            public boolean apply(Club club) {
+                return clubIds.contains(club.getClubId());
+            }
+        });
+        return Lists.newArrayList(filteredClubs);
     }
 
     public void savePlayer(String clubId, Player player) {
-        datastoreHelper.savePlayers(clubId, Collections.<Player>singletonList(player));
+        datastoreHelper.savePlayers(clubId, Collections.singletonList(player));
     }
 
     public List<Player> getPlayersByClub(String clubId) {
@@ -53,7 +60,7 @@ public class PingpongService {
     }
 
     public void saveMatch(String clubId, Match match) {
-        List<String> playerIds = Arrays.<String>asList(match.getP1Id(), match.getP2Id());
+        List<String> playerIds = Arrays.asList(match.getP1Id(), match.getP2Id());
         Map<String, Player> idPlayerMap = getIdPlayerMap(clubId, playerIds);
         Player player1 = idPlayerMap.get(match.getP1Id());
         Player player2 = idPlayerMap.get(match.getP2Id());
@@ -61,20 +68,21 @@ public class PingpongService {
         processRatingScore(player1, player2, match);
 
         int year = getYear(new Date(match.getMatchDate()));
-        datastoreHelper.saveMatches(clubId, player1.getPlayerId(), year, Collections.<Match>singletonList(match));
+        datastoreHelper.saveMatches(clubId, player1.getPlayerId(), year, Collections.singletonList(match));
         Match p2Match = p2Match(match);
-        datastoreHelper.saveMatches(clubId, player2.getPlayerId(), year, Collections.<Match>singletonList(p2Match));
+        datastoreHelper.saveMatches(clubId, player2.getPlayerId(), year, Collections.singletonList(p2Match));
 
         datastoreHelper.savePlayers(clubId, Arrays.asList(player1, player2));
     }
 
     private Map<String, Player> getIdPlayerMap(String clubId, List<String> playerIds) {
         List<Player> players = datastoreHelper.getPlayerByIds(clubId, playerIds);
-        Map<String, Player> idPlayerMap = new HashMap<String, Player>();
-        for (Player player : players) {
-            idPlayerMap.put(player.getPlayerId(), player);
-        }
-        return idPlayerMap;
+        return Maps.uniqueIndex(players, new Function<Player, String>() {
+            @Override
+            public String apply(Player player) {
+                return player.getPlayerId();
+            }
+        });
     }
 
     private void processRatingScore(Player p1, Player p2, Match match) {

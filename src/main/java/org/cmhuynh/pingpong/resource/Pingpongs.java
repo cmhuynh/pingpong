@@ -37,7 +37,7 @@ public class Pingpongs {
 
   @ApiMethod(name = "admin.saveClub", httpMethod = "post", path = "admin/club")
   public Club saveClub(User user, Club club) throws ServiceException {
-    if (permissionHelper.isClubAdmin(club.getClubId(), user)) {
+    if (permissionHelper.isAppAdmin()) {
       pingpongService.saveClub(club);
       return club;
     } else {
@@ -56,7 +56,7 @@ public class Pingpongs {
 
   @ApiMethod(name = "admin.saveClubAdmin", httpMethod = "post", path = "admin/clubAdmin")
   public ClubAdmin saveClubAdmin(User user, ClubAdmin clubAdmin) throws ServiceException {
-    if (permissionHelper.isClubAdmin(clubAdmin.getClubId(), user)) {
+    if (permissionHelper.isAppAdmin()) {
       pingpongService.saveClubAdmin(clubAdmin);
       return clubAdmin;
     } else {

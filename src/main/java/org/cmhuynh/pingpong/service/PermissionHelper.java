@@ -5,6 +5,9 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.utils.SystemProperty;
+import com.google.appengine.repackaged.com.google.common.base.Optional;
+import com.google.appengine.repackaged.com.google.common.base.Predicate;
+import com.google.appengine.repackaged.com.google.common.collect.Iterables;
 import org.cmhuynh.pingpong.domain.ClubAdmin;
 import org.cmhuynh.pingpong.resource.Constants;
 
@@ -39,22 +42,27 @@ public class PermissionHelper {
         return isAdmin;
     }
 
-    public boolean isClubAdmin(String clubId, User user) {
+    public boolean isClubAdmin(final String clubId, final User user) {
         if (!isProductionEnvironment()) {
             return true;
         }
 
-        if (user == null || user.getEmail() == null) {
+        if (!Optional.fromNullable(user).isPresent() || !Optional.fromNullable(user.getEmail()).isPresent()) {
             return false;
         }
 
         List<ClubAdmin> clubAdmins = datastoreHelper.getClubAdminsByAdmin(user.getEmail());
-        for (ClubAdmin clubAdmin : clubAdmins) {
-            if (clubAdmin.getClubId().equalsIgnoreCase(clubId)) {
-                return true;
+        Optional<ClubAdmin> clubAdminOpt = Iterables.tryFind(clubAdmins, new Predicate<ClubAdmin>() {
+            @Override
+            public boolean apply(ClubAdmin clubAdmin) {
+                return clubAdmin.getClubId().equalsIgnoreCase(clubId);
             }
-        }
+        });
 
-        return isAppAdmin();
+        if(clubAdminOpt.isPresent()) {
+            return true;
+        } else {
+            return isAppAdmin();
+        }
     }
 }
